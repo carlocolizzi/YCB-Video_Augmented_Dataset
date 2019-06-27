@@ -63,7 +63,7 @@ positionone = [[ 0.02338846,  0.55960668, -0.89716775],
 position = [[1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 1, 0],
-            [0, 0, 1, 0]]
+            [0, 0, 0, 1]]
 #########
 
 #Multiply HC By roto-translation matrix to obtain new coordinates
@@ -75,7 +75,7 @@ for index in range(0, len(homogenousCoordinates)):
 
 #Convert new coordinates into type of file (.XYZ?)  .obf   #code actually can also use .txt file
     #Create .txt file
-finalPath = "newfile.txt"
+finalPath = "newfile.xyz"
 os.system("touch " + finalPath)        #may not be needed
 finalFile = open(finalPath, "w")
 
