@@ -11,14 +11,15 @@ import glob
 #import ipdb; ipdb.set_trace()                          #to trace algorithm and debugging
 
 
-path = input("Drag Folder Here:")
-#path = "/Users/Carlo/Desktop/IIT/YCB_Video_Dataset/data/0000"
+#path = input("Drag Folder Here:")
+path = "/Users/Carlo/Desktop/IIT/YCB_Video_Dataset/data/0000"
+
 frames = []                                                             ##
 for name in sorted(glob.glob(path + "/??????-box.txt")):                ##Stores name of each frame (Ex. 000001)
     frames.append(name[-14:-8])                                         ##
 
-pointPath = input('Drag YCB models folder here: ')
-#pointPath = "./models"
+#pointPath = input('Drag YCB models folder here: ')
+pointPath = "/Users/Carlo/Desktop/IIT/models"
 
 progressCounter = 0
 
@@ -123,12 +124,11 @@ for filename in frames:                           #repeat the whole process for 
             finalFile.write((str(*translatedCoordinates[2])+"\n"))
             #finalFile.write((str(*translatedCoordinates[index][3])+"\n"))  #this is to reprint the coordinates in homogenous format
 
+        #Use Superquadric Algorith to Create Superquadric from translated translatedCoordinates
+        os.system("Superquadric-Pipeline-Single " + finalPath)             #this works only with icub installed
 
 
         finalFile.close()
         #Show Progress
-        print( str(int((int(frames[progressCounter]) / int(frames[-1]))*100)) + "% Completed")
-        progressCounter += 1
-
-    #Use Superquadric Algorith to Create Superquadric from translated translatedCoordinates
-    #os.system("Superquadric-Pipeline-Single " + finalPath)             #this works only with icub installed
+    print( str(int((int(frames[progressCounter]) / int(frames[-1]))*100)) + "% Completed")
+    progressCounter += 1
