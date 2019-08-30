@@ -11,7 +11,6 @@ import glob
 import vtk
 import math
 from scipy.spatial.transform import Rotation as R
-#import ipdb; ipdb.set_trace()                          #to trace algorithm and debugging
 
 
 #visualizes superquadrics given an array with parameters
@@ -290,16 +289,19 @@ for filename in frames:                           #repeat the whole process for 
         tempParameters = tempParameters[61:-2].split(", ")
         superquadricPar[progressCounter][index] = numpy.array(list(map(float, tempParameters)))
 
+        eulerAngles = [0] * 3
         angleAxis = [0] * 4
-        angleAxis[0] = R.from_euler("z", superquadricPar[progressCounter][index][8], degrees=True)
-        angleAxis[1] = R.from_euler("y", superquadricPar[progressCounter][index][9], degrees=True)
-        angleAxis[2] = R.from_euler("z", superquadricPar[progressCounter][index][10], degrees=True)
-        angleAxis[0] = angleAxis[0].as_rotvec()[2]
-        angleAxis[1] = angleAxis[1].as_rotvec()[2]
-        angleAxis[2] = angleAxis[2].as_rotvec()[2]
-        angleAxis[3] = numpy.linalg.norm(angleAxis[0:3])
-        #need to figure out how to get theta (angleAxis[3])
 
+        Rz = R.from_euler("z", superquadricPar[progressCounter][index][8], degrees=True)
+        Ry = R.from_euler("y", superquadricPar[progressCounter][index][9], degrees=True)
+        Rz2 = R.from_euler("z", superquadricPar[progressCounter][index][10], degrees=True)
+        Rfinal = Rz * Ry * Rz2
+        angleAxis= Rfinal.as_rotvec()
+        theta = numpy.linalg.norm(angleAxis)
+        angleAxis = angleAxis / theta
+        #need to figure out how to get theta (angleAxis[3])
+        import ipdb; ipdb.set_trace()                          #to trace algorithm and debugging
+##DA ZYZ a XYZ e ricontrollare
         #angleAxis = eulertoangle(superquadricPar[progressCounter][index][8], superquadricPar[progressCounter][index][9], superquadricPar[progressCounter][index][10])
         superquadric[index] = numpy.array([superquadricPar[progressCounter][index][0],
                                  superquadricPar[progressCounter][index][1],
@@ -312,7 +314,7 @@ for filename in frames:                           #repeat the whole process for 
                                  angleAxis[0],
                                  angleAxis[1],
                                  angleAxis[2],
-                                 angleAxis[3]])
+                                 theta])
 
 
     visualizeSuperquadric(superquadric, fn=(path + "/" + filename + "-color.png"))
