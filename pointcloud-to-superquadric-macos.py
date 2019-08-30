@@ -2,6 +2,7 @@
 #27.06.2019
 
 #This file requires python3, numpy, scipy, superquadric-lib
+#Doesnt use VTK.  Go to scripts folder for visualizer
 
 import sys                      #needs to be UNIX-based
 import numpy
