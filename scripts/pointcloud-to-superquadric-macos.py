@@ -98,7 +98,7 @@ def visualizeSuperquadric(parameters, fn):
     render_window_interactor.SetRenderWindow(render_window)
 
     # Add actors to the renderers
-    #scene_renderer.AddActor(superquadric_actor)
+    scene_renderer.AddActor(superquadric_actor)
     background_renderer.AddActor(image_actor)
 
     # Render once to figure out where the background camera will be
@@ -109,13 +109,8 @@ def visualizeSuperquadric(parameters, fn):
     spacing = image_data.GetSpacing()
     extent = image_data.GetExtent()
 
-    camera = vtk.vtkCamera()
-
-    #camera = background_renderer.GetActiveCamera()
+    camera = background_renderer.GetActiveCamera()
     camera.ParallelProjectionOn()
-
-
-
 
     xc = origin[0] + 0.5 * (extent[0] + extent[1]) * spacing[0]
     yc = origin[1] + 0.5 * (extent[2] + extent[3]) * spacing[1]
@@ -125,8 +120,8 @@ def visualizeSuperquadric(parameters, fn):
     camera.SetParallelScale(0.5 * yd)
     camera.SetFocalPoint(xc, yc, 0.0)
     camera.SetPosition(xc, yc, d)
-    print(xc, yc, d)
-    scene_renderer.SetActiveCamera(camera)
+    #print(xc, yc, d)
+    #scene_renderer.SetActiveCamera(camera)
     # Render again to set the correct view
     render_window.Render()
 
@@ -295,9 +290,14 @@ for filename in frames:                           #repeat the whole process for 
         tempParameters = tempParameters[61:-2].split(", ")
         superquadricPar[progressCounter][index] = numpy.array(list(map(float, tempParameters)))
 
-        AngleAxis[0] = R.from_euler("z", superquadricPar[progressCounter][index][8], degrees=True)
-        AngleAxis[1] = R.from_euler("y", superquadricPar[progressCounter][index][9], degrees=True)
-        AngleAxis[2] = R.from_euler("z", superquadricPar[progressCounter][index][10], degrees=True)
+        angleAxis = [0] * 4
+        angleAxis[0] = R.from_euler("z", superquadricPar[progressCounter][index][8], degrees=True)
+        angleAxis[1] = R.from_euler("y", superquadricPar[progressCounter][index][9], degrees=True)
+        angleAxis[2] = R.from_euler("z", superquadricPar[progressCounter][index][10], degrees=True)
+        angleAxis[0] = angleAxis[0].as_rotvec()[2]
+        angleAxis[1] = angleAxis[1].as_rotvec()[2]
+        angleAxis[2] = angleAxis[2].as_rotvec()[2]
+        angleAxis[3] = numpy.linalg.norm(angleAxis[0:3])
         #need to figure out how to get theta (angleAxis[3])
 
         #angleAxis = eulertoangle(superquadricPar[progressCounter][index][8], superquadricPar[progressCounter][index][9], superquadricPar[progressCounter][index][10])
